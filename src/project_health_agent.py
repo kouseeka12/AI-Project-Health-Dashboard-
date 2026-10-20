@@ -151,14 +151,17 @@ class ProjectHealthAgent:
 
     def evaluate(self, workbook_path: Path) -> ProjectHealth:
         wb = openpyxl.load_workbook(workbook_path, data_only=True, read_only=True)
-        plan_ws = self._find_plan_sheet(wb)
-        headers = [cell for cell in next(plan_ws.iter_rows(min_row=1, max_row=1, values_only=True))]
-        cols = self._map_columns(headers)
-        raw_rows = list(plan_ws.iter_rows(min_row=2, values_only=True))
-        rows = [self._row_dict(row, cols) for row in raw_rows]
-        rows = [row for row in rows if any(row.get(k) for k in ("task", "status", "schedule_health"))]
-        summary = self._read_summary(wb)
-        comments = self._read_comments(wb)
+        try:
+            plan_ws = self._find_plan_sheet(wb)
+            headers = [cell for cell in next(plan_ws.iter_rows(min_row=1, max_row=1, values_only=True))]
+            cols = self._map_columns(headers)
+            raw_rows = list(plan_ws.iter_rows(min_row=2, values_only=True))
+            rows = [self._row_dict(row, cols) for row in raw_rows]
+            rows = [row for row in rows if any(row.get(k) for k in ("task", "status", "schedule_health"))]
+            summary = self._read_summary(wb)
+            comments = self._read_comments(wb)
+        finally:
+            wb.close()
 
         metrics = self._metrics(rows, summary, comments)
         signals = self._signals(metrics, summary)

@@ -1,0 +1,41 @@
+:root { font-family: "Segoe UI", sans-serif; color: #18332c; background: #f2f6f4; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { background: #113c30; color: white; padding: 38px max(24px, calc((100vw - 1160px) / 2)); }
+h1 { font-size: clamp(26px, 4vw, 38px); margin: 10px 0; }
+header p { color: #c4dbd1; }
+header a { color: #91e9b3; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; }
+main { max-width: 1208px; margin: auto; padding: 24px; }
+section { margin-bottom: 24px; }
+.database, .toolbar, #detail { background: white; border: 1px solid #d5e3dc; border-radius: 12px; padding: 24px; }
+.database { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; border-top: 4px solid #168c54; }
+h2 { font-size: 20px; margin: 8px 0; }
+dl { display: flex; gap: 30px; margin-right: auto; flex-wrap: wrap; }
+dt { color: #64756d; font-size: 12px; }
+dd { margin: 6px 0; font-weight: 650; }
+button { background: #126c46; color: white; border: none; border-radius: 6px; padding: 11px 16px; cursor: pointer; font-weight: 600; }
+button:hover { background: #0b5134; }
+button:disabled { opacity: .45; cursor: wait; }
+button.danger { background: #f9e8e6; color: #9a2e28; }
+label { display: block; font-size: 13px; font-weight: 600; }
+input, textarea { display: block; max-width: 100%; margin: 8px 0 14px; padding: 10px; border: 1px solid #bdcfc4; border-radius: 5px; font: inherit; }
+textarea { width: 100%; }
+.toolbar form { margin-top: 22px; padding-top: 20px; border-top: 1px solid #e2eae5; }
+p, li { line-height: 1.6; }
+.section-heading { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.section-heading span, footer { font-size: 13px; color: #63776c; }
+#reports { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 16px; }
+.report { padding: 22px; background: white; border: 1px solid #d5e3dc; border-radius: 10px; }
+.report h3 { margin-top: 0; }
+.report code { display: block; overflow-wrap: anywhere; margin-bottom: 18px; font-size: 12px; }
+.report button { margin-right: 8px; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; }
+.red { background: #fee2e2; color: #a32323; }
+.amber { background: #fef0bd; color: #845b08; }
+.green { background: #d3f5df; color: #155c35; }
+#message { min-height: 24px; color: #126c46; }
+#message.error { color: #ae2828; }
+nav { display: flex; justify-content: center; align-items: center; gap: 18px; margin: 20px 0; }
+pre { max-height: 460px; overflow: auto; background: #142a23; color: #d4f2e0; padding: 20px; border-radius: 8px; font-size: 12px; }
+footer { text-align: center; padding: 24px; }

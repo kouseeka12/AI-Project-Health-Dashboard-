@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Health | MongoDB Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header><span class="eyebrow">PROJECT INTELLIGENCE</span><h1>Project Health Dashboard</h1>
+    <p>Excel analysis, backed by a real MongoDB database.</p>
+    <a href="/docs" target="_blank" rel="noopener">Explore backend API &rarr;</a>
+  </header>
+  <main>
+    <section class="database" aria-label="Database connection">
+      <div><span class="eyebrow">DATABASE CONNECTION</span><h2 id="connection">Checking MongoDB...</h2></div>
+      <dl><div><dt>Database</dt><dd id="database">-</dd></div><div><dt>Collection</dt><dd id="collection">-</dd></div><div><dt>Saved documents</dt><dd id="count">-</dd></div></dl>
+      <button id="refresh" type="button">Refresh from database</button>
+    </section>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section class="toolbar" aria-label="Analyze project plans">
+      <div><h2>Create a project report</h2><p>Deterministic analysis uses the existing RAG engine. No AI key required.</p></div>
+      <label>Analysis date <input id="as-of" type="date" value="2026-07-09" required></label>
+      <button id="samples" type="button">Analyze &amp; save sample plans</button>
+      <form id="upload-form"><label>Or upload an Excel plan (max 10 MB)<input id="file" type="file" accept=".xlsx" required></label><button type="submit">Analyze &amp; save upload</button></form>
+    </section>
+    <section>
+      <div class="section-heading"><h2>Saved reports</h2><span>Loaded from MongoDB, not browser storage</span></div>
+      <div id="reports"></div>
+      <nav aria-label="Report pages"><button id="previous" type="button">Previous</button><span id="page"></span><button id="next" type="button">Next</button></nav>
+    </section>
+    <section id="detail" hidden aria-label="Report details">
+      <h2 id="detail-title"></h2>
+      <p id="reason"></p>
+      <h3>Recommended actions</h3><ul id="recommendations"></ul>
+      <form id="notes-form"><label>Professor demo / project notes<textarea id="notes" maxlength="2000" rows="3"></textarea></label><button type="submit">Save notes to MongoDB</button></form>
+      <h3>Stored MongoDB document</h3><p>This document is fetched through the backend using its ObjectId.</p><pre id="document"></pre>
+    </section>
+  </main>
+  <footer>Frontend &rarr; Python FastAPI &rarr; MongoDB &bull; Local demonstration only</footer>
+</body>
+</html>

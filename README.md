@@ -1,5 +1,108 @@
 # Project Health Reporting Agent
 
+## MongoDB backend and web dashboard
+
+The local web app connects the browser to a FastAPI backend and **real MongoDB**:
+
+```text
+Browser dashboard -> FastAPI API -> project_health.reports (MongoDB)
+                             |
+                       Existing Excel RAG analyzer
+```
+
+Reports, metrics, recommendations, timestamps, and editable notes are stored as
+MongoDB documents. The dashboard does not use localStorage or a mock database.
+The existing command-line AI workflow remains unchanged. The web dashboard
+uses deterministic analysis and does not call Gemini or require an API key.
+
+### Start the demo on Windows
+
+Use Python 3.10+ and MongoDB Community Server. Install dependencies from the
+repository root (a virtual environment is recommended):
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+If MongoDB is already running as a Windows service, leave it running and skip
+the next command. Otherwise, put `mongod.exe` on PATH, or use the local copy
+in `.local\mongodb\bin`, and run in **terminal 1**:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_mongodb.ps1
+```
+
+In **terminal 2**:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_demo.ps1
+```
+
+Open **http://127.0.0.1:8000**. Keep both terminals open. Stop each server with
+Ctrl+C; database files remain in `.local\mongodb\data` across restarts.
+Never delete that directory if you want to keep your saved reports.
+
+Configuration is through backend environment variables:
+
+```powershell
+$env:MONGODB_URI = "mongodb://127.0.0.1:27017"
+$env:MONGODB_DATABASE = "project_health"
+```
+
+Set these before starting the dashboard. Never put credentials into frontend
+code or commit them. This is an unauthenticated **localhost-only teaching demo**,
+not a production deployment. Do not expose its ports publicly.
+
+### Demonstrate MongoDB to your professor
+
+1. Show **MongoDB connected**, database `project_health`, collection `reports`,
+   and the live document count on the dashboard.
+2. Leave the analysis date at **2026-07-09**, which matches the provided sample
+   plans. Click **Analyze & save sample plans**. Two fresh reports are inserted.
+   Each click deliberately creates new historical report documents.
+3. Click **View document** to show the actual MongoDB ObjectId, metrics, RAG
+   status, and stored JSON fetched from the API.
+4. Enter a note and click **Save notes to MongoDB**. Refresh the browser and
+   reopen the document to show that the update persisted.
+5. Optionally install **MongoDB Compass**, connect to
+   `mongodb://127.0.0.1:27017`, then open **project_health > reports**. Refresh
+   Compass after each operation to show the same ObjectId and notes.
+6. Stop and restart the API and MongoDB, then refresh the dashboard. Reports
+   should still be present: the database, not the browser, stores them.
+7. Delete a report and refresh Compass to demonstrate deletion. Deletion is
+   permanent and requires confirmation in the dashboard.
+8. Optionally upload an `.xlsx` project plan (10 MB maximum). Supported
+   workbooks must use the structure recognized by the existing analyzer.
+
+Interactive API documentation is at **http://127.0.0.1:8000/docs**:
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Ping MongoDB and count saved documents |
+| GET | `/api/reports?page=1` | Read saved reports, 20 per page |
+| POST | `/api/reports/samples` | Analyze both supplied workbooks and insert reports |
+| POST | `/api/reports/upload` | Analyze and save an uploaded workbook |
+| GET | `/api/reports/{id}` | Read a document by its MongoDB ObjectId |
+| PATCH | `/api/reports/{id}` | Update notes with `{"notes": "..."}` |
+| DELETE | `/api/reports/{id}` | Delete one saved report |
+
+MongoDB connection failures return HTTP **503** and are displayed in the UI;
+the app never pretends to save data when the database is unavailable.
+
+### Validate the integration
+
+With MongoDB running:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+The integration tests use an isolated, randomly named test database and delete
+only that database afterwards. They exercise real MongoDB CRUD, uploads,
+pagination, persistence across application connections, and failure responses.
+They also compare uploaded report calculations with the existing analyzer.
+
 An AI-powered Project Health Reporting Agent developed for the **Zycus AI Engineer Intern Technical Assignment**.
 
 The solution automatically analyzes Microsoft Excel project plans, determines project health using a configurable **Red–Amber–Green (RAG)** framework, performs AI-assisted reasoning using **Google Gemini 2.5 Flash**, and generates executive-ready project reports along with a portfolio-level monthly synthesis.
@@ -312,4 +415,3 @@ Potential enhancements include:
 # Author
 
 Prepared as part of the **Zycus AI Engineer Intern Technical Assignment**, demonstrating the application of deterministic analytics and Google Gemini-powered reasoning for automated project health reporting.
-
